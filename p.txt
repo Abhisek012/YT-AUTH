@@ -1,4 +1,0 @@
-mTSLL8ukoZ9SCNfT
-yt-auth-server
-
-mongodb+srv://yt-auth-server:mTSLL8ukoZ9SCNfT@yt-auth.5skfabm.mongodb.net/
