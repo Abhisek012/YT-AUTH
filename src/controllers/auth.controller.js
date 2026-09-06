@@ -61,6 +61,6 @@ export async function getMe(req,res){
 
     const decoded = jwt.verify(token,config.JWT_SECRET);
     
-    const user
+    
 
 }
