@@ -1,66 +1,60 @@
 import userModel from "../models/user.model.js";
 import crypto from "crypto";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 
+export async function register(req, res) {
+  const { username, email, password } = req.body;
 
-export async function register(req , res){
+  const isAlreadyRegistered = await userModel.findOne({
+    $or: [{ username }, { email }],
+  });
 
-    const {username, email, password} = req.body;
+  if (isAlreadyRegistered) {
+    res.json(409).json({
+      message: "Username or email already exists",
+    });
+  }
 
-    const isAlreadyRegistered = await userModel.findOne({
-        $or:[
-            {username},
-            {email}
-        ]
-    })
+  const hashedPassword = crypto
+    .createHash("sha256")
+    .update(password)
+    .digest("hex");
 
-    if(isAlreadyRegistered){
-        res.json(409).json({
-            message: "Username or email already exists"
-        })
-    }
+  const user = await userModel.create({
+    username,
+    email,
+    password: hashedPassword,
+  });
 
+  const token = jwt.sign(
+    {
+      id: user._id,
+    },
+    config.JWT_SECRET,
+    {
+      expiresIn: "10d",
+    },
+  );
 
-    const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
-
-    const user = await userModel.create({
-        username,
-        email,
-        password: hashedPassword
-    })
-
-
-    const token = jwt.sign({
-        id: user._id
-    },config.JWT_SECRET,{
-        expiresIn: "10d"
-    })
-
-    res.status(201).json({
-        message: "User registerd successfully",
-        user:{
-            username: user.username,
-            email:user.email,
-           
-
-        },token
-    })
-
-
+  res.status(201).json({
+    message: "User registerd successfully",
+    user: {
+      username: user.username,
+      email: user.email,
+    },
+    token,
+  });
 }
 
-export async function getMe(req,res){
-    const token = req.headers.authorization?.split(" ")[1];
+export async function getMe(req, res) {
+  const token = req.headers.authorization?.split(" ")[1];
 
-    if(!token){
-        res.status(401).json({
-            message: "Token not found"
-        })
-    }
+  if (!token) {
+    res.status(401).json({
+      message: "Token not found",
+    });
+  }
 
-    const decoded = jwt.verify(token,config.JWT_SECRET);
-    
-    
-
+  const decoded = jwt.verify(token, config.JWT_SECRET);
 }
