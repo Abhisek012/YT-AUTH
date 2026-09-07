@@ -16,10 +16,7 @@ export async function register(req, res) {
     });
   }
 
-  const hashedPassword = crypto
-    .createHash("sha256")
-    .update(password)
-    .digest("hex");
+  const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
 
   const user = await userModel.create({
     username,
