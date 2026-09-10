@@ -2,6 +2,7 @@ import userModel from "../models/user.model.js";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
+import dotenv from "dotenv" ;
 
 export async function register(req, res) {
     const { username, email, password } = req.body;
@@ -47,14 +48,14 @@ export async function register(req, res) {
     });
 }
 
-// export async function getMe(req, res) {
-//   const token = req.headers.authorization?.split(" ")[1];
+export async function getMe(req, res) {
+  const token = req.headers.authorization?.split(" ")[1];
 
-//   if (!token) {
-//     res.status(401).json({
-//       message: "Token not found",
-//     });
-//   }
+  if (!token) {
+    return res.status(401).json({
+      message: "Token not found",
+    });
+  }
 
-//   const decoded = jwt.verify(token, config.JWT_SECRET);
-// }
+  const decoded = jwt.verify(token, config.JWT_SECRET);
+}
