@@ -10,4 +10,7 @@ authRouter.post("/register",authController.register)
 // GET  /api/auth/getMe
 authRouter.get("/getMe",authController.getMe)
 
+// GET /api/auth/refreshToken
+authRouter.get("/refreshToken", authController.refreshToken)
+
 export default authRouter;
