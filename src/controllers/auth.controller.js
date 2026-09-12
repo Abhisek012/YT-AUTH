@@ -42,6 +42,7 @@ export async function register(req, res) {
         }
     );
 
+
     const refreshToken = jwt.sign(
         {
             id: user._id
@@ -56,7 +57,7 @@ export async function register(req, res) {
        httpOnly: true,
        secure: false,
        sameSite: "strict", 
-       maxAge: 7 * 24 * 60 * 60 * 1000
+       maxAge: 15 * 24 * 60 * 60 * 1000
     })
 
 
@@ -106,7 +107,7 @@ export async function refreshToken(req,res){
 
     const accessToken = jwt.sign(
         {
-            id : decoded._id
+            id : decoded.id
         },config.JWT_SECRET,
         {
             expiresIn: "15m"
@@ -116,7 +117,7 @@ export async function refreshToken(req,res){
 
     const newrefreshToken = jwt.sign(
         {
-            id: decoded._id
+            id: decoded.id
         },config.JWT_SECRET,
         {
             expiresIn: "15d"
@@ -127,7 +128,7 @@ export async function refreshToken(req,res){
         httpOnly: true,
         secure: false,
         sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000
+        maxAge: 15 * 24 * 60 * 60 * 1000
 
     })
 
